@@ -1,5 +1,3 @@
-// implementing the specifics for the bbsteno machine
-
 use anyhow::Result;
 use serial2::SerialPort;
 

@@ -2,10 +2,10 @@ use anyhow::Result;
 
 mod action;
 mod bbsteno;
+mod cre;
 mod dictionary;
 mod engine;
 mod machine;
-mod stroke;
 
 use bbsteno::BBSteno;
 use dictionary::Dictionary;

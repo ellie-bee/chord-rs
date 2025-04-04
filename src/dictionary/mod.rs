@@ -4,7 +4,7 @@ use std::io::Read;
 
 use crate::action::Action;
 
-use crate::stroke::Chord;
+use crate::cre::Chord;
 use anyhow::Result;
 use serde_json::Value;
 
