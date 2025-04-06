@@ -13,7 +13,7 @@ use engine::Engine;
 
 fn main() -> Result<()> {
     let dictionary = Dictionary::load_from_json("dict/main.json")?;
-    dictionary.print_dict();
+    // dictionary.print_dict();
 
     let mut engine = Engine::new();
 

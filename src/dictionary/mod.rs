@@ -27,7 +27,7 @@ impl Dictionary {
         for (k, v) in raw_dict {
             match (Chord::from_str(k), Action::from_str(v)) {
                 (Ok(chord), Ok(action)) => _ = dict.insert(chord, action),
-                _ => print!("Malformed dictionary entry: {:?} {:?}", k, v),
+                _ => println!("Malformed dictionary entry: {:?} {:?}", k, v),
             }
         }
 
@@ -38,5 +38,9 @@ impl Dictionary {
         for (k, v) in self.0.iter() {
             println!("{:?}: {:?}", k, v);
         }
+    }
+
+    pub(crate) fn new() -> Self {
+        Dictionary(HashMap::new())
     }
 }

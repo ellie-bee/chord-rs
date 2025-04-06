@@ -6,6 +6,10 @@ use core::fmt;
 pub struct Chord(Vec<Stroke>);
 
 impl Chord {
+    pub fn new(strokes: Vec<Stroke>) -> Chord {
+        Chord(strokes)
+    }
+
     pub fn from_str(k: &str) -> Result<Chord> {
         let strokes: Result<Vec<Stroke>> = k.split("/").map(Stroke::from_str).collect();
 
