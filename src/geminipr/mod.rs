@@ -2,12 +2,12 @@ use crate::{cre::Stroke, machine::Machine};
 use anyhow::Result;
 use serial2::SerialPort;
 
-pub struct BBSteno {
+pub struct GeminiPR {
     tty_path: String,
     port: Option<SerialPort>,
 }
 
-impl BBSteno {
+impl GeminiPR {
     pub(crate) fn new(tty_path: &str) -> Result<Self> {
         Ok(Self {
             tty_path: tty_path.into(),
@@ -16,7 +16,7 @@ impl BBSteno {
     }
 }
 
-impl Machine for BBSteno {
+impl Machine for GeminiPR {
     fn connect(&mut self) -> Result<()> {
         let port = SerialPort::open(&self.tty_path, 115200)?;
         self.port = Some(port);

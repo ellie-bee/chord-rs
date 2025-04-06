@@ -1,5 +1,16 @@
 # Change Log
 
+## [unreleased] - 2025-04-06 - part 2
+
+Turns out my BBSteno follows the exact same format as the GeminiPR machine? I think?
+
+Single stroke lookup is working!
+
+
+### Changed
+- renamed BBSteno everything to GeminiPR to align more with Plover
+- dictinoary lookup works for single strokes.
+
 ## [unreleased] - 2025-04-06
 
 Fleshed out loading a dictionary from file, reading and writing of chords mostly works.

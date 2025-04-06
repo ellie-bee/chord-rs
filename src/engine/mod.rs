@@ -1,6 +1,11 @@
 use std::collections::VecDeque;
 
-use crate::{cre::Stroke, dictionary::Dictionary, machine::Machine};
+use crate::{
+    action::Action,
+    cre::{Chord, Stroke},
+    dictionary::Dictionary,
+    machine::Machine,
+};
 use anyhow::Result;
 
 pub struct Engine<M: Machine> {
@@ -30,7 +35,7 @@ where
     }
 
     pub(crate) fn include(&mut self, dictionary: Dictionary) {
-        self.dictionary.0.extend(dictionary.0);
+        self.dictionary.extend(dictionary);
     }
 
     pub(crate) fn run(&mut self) {
@@ -40,11 +45,15 @@ where
             };
 
             self.previous_strokes.push(stroke);
-            self.check_strokes.push(stroke);
+            self.check_strokes.push_front(stroke);
 
-            let Some(action) = self.dictionary.lookup(Chord::new(check_strokes));
+            print!("{} | ", stroke.as_tape());
+            match self.dictionary.lookup(&self.check_strokes) {
+                Some(Action::Text(t)) => println!("{}", t),
+                _ => println!("???"),
+            }
 
-            println!("{}", stroke.as_tape());
+            self.check_strokes = VecDeque::new();
         }
     }
     pub(crate) fn disconnect(&mut self) {

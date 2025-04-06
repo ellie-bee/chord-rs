@@ -88,22 +88,22 @@ impl Stroke {
                     seen_s = true;
                     seen_t = true;
                     seen_p = true;
-                    stroke |= Stroke::START_T;
+                    stroke |= Stroke::START_W;
                 }
                 'H' | 'h' => {
                     seen_s = true;
                     seen_t = true;
                     seen_p = true;
-                    stroke |= Stroke::START_T;
+                    stroke |= Stroke::START_H;
                 }
                 'R' | 'r' => {
                     seen_s = true;
                     seen_t = true;
                     seen_p = true;
                     if !seen_r {
-                        stroke |= Stroke::START_T;
+                        stroke |= Stroke::START_R;
                     } else {
-                        stroke |= Stroke::END_T;
+                        stroke |= Stroke::END_R;
                     }
                     seen_r = true;
                 }

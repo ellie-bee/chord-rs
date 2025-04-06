@@ -1,17 +1,18 @@
 use crate::cre::stroke::*;
 use anyhow::Result;
 use core::fmt;
+use std::collections::VecDeque;
 
 #[derive(Hash, PartialEq, Eq)]
-pub struct Chord(Vec<Stroke>);
+pub struct Chord(VecDeque<Stroke>);
 
 impl Chord {
-    pub fn new(strokes: Vec<Stroke>) -> Chord {
+    pub fn new(strokes: VecDeque<Stroke>) -> Chord {
         Chord(strokes)
     }
 
     pub fn from_str(k: &str) -> Result<Chord> {
-        let strokes: Result<Vec<Stroke>> = k.split("/").map(Stroke::from_str).collect();
+        let strokes: Result<VecDeque<Stroke>> = k.split("/").map(Stroke::from_str).collect();
 
         Ok(Chord(strokes?))
     }

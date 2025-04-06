@@ -1,14 +1,16 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, VecDeque};
 use std::fs::File;
 use std::io::Read;
 
 use crate::action::Action;
 
-use crate::cre::Chord;
+use crate::cre::{Chord, Stroke};
 use anyhow::Result;
 use serde_json::Value;
 
-pub struct Dictionary(pub HashMap<Chord, Action>);
+pub struct Dictionary {
+    internal_dict: HashMap<Chord, Action>,
+}
 
 impl Dictionary {
     pub(crate) fn load_from_json(dictionary_path: &str) -> Result<Self> {
@@ -27,20 +29,34 @@ impl Dictionary {
         for (k, v) in raw_dict {
             match (Chord::from_str(k), Action::from_str(v)) {
                 (Ok(chord), Ok(action)) => _ = dict.insert(chord, action),
-                _ => println!("Malformed dictionary entry: {:?} {:?}", k, v),
+                _ => continue,
+                // _ => println!("Malformed dictionary entry: {:?} {:?}", k, v),
             }
         }
 
-        Ok(Dictionary(dict))
+        Ok(Dictionary {
+            internal_dict: dict,
+        })
     }
 
     pub(crate) fn print_dict(&self) {
-        for (k, v) in self.0.iter() {
+        for (k, v) in self.internal_dict.iter() {
             println!("{:?}: {:?}", k, v);
         }
     }
 
     pub(crate) fn new() -> Self {
-        Dictionary(HashMap::new())
+        Dictionary {
+            internal_dict: HashMap::new(),
+        }
+    }
+
+    pub fn lookup(&self, strokes: &VecDeque<Stroke>) -> Option<&Action> {
+        let chord = Chord::new(strokes.clone());
+        self.internal_dict.get(&chord)
+    }
+
+    pub(crate) fn extend(&mut self, dictionary: Dictionary) {
+        self.internal_dict.extend(dictionary.internal_dict)
     }
 }

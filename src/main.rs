@@ -1,15 +1,15 @@
 use anyhow::Result;
 
 mod action;
-mod bbsteno;
 mod cre;
 mod dictionary;
 mod engine;
+mod geminipr;
 mod machine;
 
-use bbsteno::BBSteno;
 use dictionary::Dictionary;
 use engine::Engine;
+use geminipr::GeminiPR;
 
 fn main() -> Result<()> {
     let dictionary = Dictionary::load_from_json("dict/main.json")?;
@@ -18,7 +18,7 @@ fn main() -> Result<()> {
     let mut engine = Engine::new();
 
     engine.include(dictionary);
-    engine.connect(BBSteno::new("/dev/ttyACM0")?)?;
+    engine.connect(GeminiPR::new("/dev/ttyACM0")?)?;
 
     engine.run();
 
