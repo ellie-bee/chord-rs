@@ -1,15 +1,9 @@
 use anyhow::Result;
 
-mod action;
-mod cre;
-mod dictionary;
-mod engine;
-mod geminipr;
-mod machine;
+mod chording_engine;
 
-use dictionary::Dictionary;
-use engine::Engine;
-use geminipr::GeminiPR;
+use chording_engine::dictionary::Dictionary;
+use chording_engine::{engine::Engine, machines::geminipr::GeminiPR};
 
 fn main() -> Result<()> {
     let dictionary = Dictionary::load_from_json("dict/main.json")?;

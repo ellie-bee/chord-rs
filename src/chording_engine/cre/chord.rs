@@ -1,20 +1,23 @@
-use crate::cre::stroke::*;
+use crate::chording_engine::cre::stroke::*;
 use anyhow::Result;
 use core::fmt;
-use std::collections::VecDeque;
 
 #[derive(Hash, PartialEq, Eq)]
-pub struct Chord(VecDeque<Stroke>);
+pub struct Chord(Vec<Stroke>);
 
 impl Chord {
-    pub fn new(strokes: VecDeque<Stroke>) -> Chord {
+    pub fn new(strokes: Vec<Stroke>) -> Chord {
         Chord(strokes)
     }
 
     pub fn from_str(k: &str) -> Result<Chord> {
-        let strokes: Result<VecDeque<Stroke>> = k.split("/").map(Stroke::from_str).collect();
+        let strokes: Result<Vec<Stroke>> = k.split("/").map(Stroke::from_str).collect();
 
         Ok(Chord(strokes?))
+    }
+
+    pub(crate) fn length(&self) -> usize {
+        self.0.len()
     }
 }
 

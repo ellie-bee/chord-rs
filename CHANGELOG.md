@@ -1,5 +1,12 @@
 # Change Log
 
+## [unreleased] - 2025-04-07
+
+moved everything into an engine subfolder to keep things organized for when I *eventually* move onto implementing UX/UI. 
+
+### Changed
+- Multistrokes working to some extent 👀
+
 ## [unreleased] - 2025-04-06 - part 2
 
 Turns out my BBSteno follows the exact same format as the GeminiPR machine? I think?

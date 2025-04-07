@@ -2,14 +2,16 @@ use std::collections::{HashMap, VecDeque};
 use std::fs::File;
 use std::io::Read;
 
-use crate::action::Action;
-
-use crate::cre::{Chord, Stroke};
+use crate::chording_engine::{
+    action::Action,
+    cre::{Chord, Stroke},
+};
 use anyhow::Result;
 use serde_json::Value;
 
 pub struct Dictionary {
     internal_dict: HashMap<Chord, Action>,
+    longest_key_len: Option<usize>,
 }
 
 impl Dictionary {
@@ -30,12 +32,12 @@ impl Dictionary {
             match (Chord::from_str(k), Action::from_str(v)) {
                 (Ok(chord), Ok(action)) => _ = dict.insert(chord, action),
                 _ => continue,
-                // _ => println!("Malformed dictionary entry: {:?} {:?}", k, v),
             }
         }
 
         Ok(Dictionary {
             internal_dict: dict,
+            longest_key_len: None,
         })
     }
 
@@ -48,15 +50,37 @@ impl Dictionary {
     pub(crate) fn new() -> Self {
         Dictionary {
             internal_dict: HashMap::new(),
+            longest_key_len: None,
         }
     }
 
-    pub fn lookup(&self, strokes: &VecDeque<Stroke>) -> Option<&Action> {
-        let chord = Chord::new(strokes.clone());
+    pub fn lookup(&self, strokes: &[Stroke]) -> Option<&Action> {
+        let chord = Chord::new(strokes.to_vec());
         self.internal_dict.get(&chord)
     }
 
     pub(crate) fn extend(&mut self, dictionary: Dictionary) {
         self.internal_dict.extend(dictionary.internal_dict)
+    }
+
+    fn update_longest_key_len(&mut self) -> usize {
+        let mut longest = 0;
+        for k in self.internal_dict.keys() {
+            let k_len = k.length();
+            if longest < k_len {
+                longest = k_len
+            }
+        }
+
+        self.longest_key_len = Some(longest);
+
+        longest
+    }
+
+    pub(crate) fn longest_key_len(&mut self) -> usize {
+        match self.longest_key_len {
+            Some(s) => s,
+            None => self.update_longest_key_len(),
+        }
     }
 }

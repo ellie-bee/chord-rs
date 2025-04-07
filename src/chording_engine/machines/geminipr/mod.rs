@@ -1,4 +1,5 @@
-use crate::{cre::Stroke, machine::Machine};
+use crate::chording_engine::{cre::Stroke, machines::Machine};
+
 use anyhow::Result;
 use serial2::SerialPort;
 

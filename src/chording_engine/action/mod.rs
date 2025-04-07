@@ -1,6 +1,6 @@
 use anyhow::Result;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Action {
     Text(String),
 }
@@ -12,5 +12,9 @@ impl Action {
         } else {
             Err(anyhow::anyhow!("Malformed entry: {:?}", v))
         }
+    }
+
+    pub(crate) fn execute_action(&self) {
+        todo!()
     }
 }

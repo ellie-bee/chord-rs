@@ -1,6 +1,8 @@
 use anyhow::Result;
 
-use crate::cre::Stroke;
+use crate::chording_engine::cre::Stroke;
+
+pub(crate) mod geminipr;
 
 pub trait Machine {
     fn connect(&mut self) -> Result<()>;
