@@ -60,6 +60,7 @@ impl Dictionary {
     }
 
     pub(crate) fn extend(&mut self, dictionary: Dictionary) {
+        self.update_longest_key_len();
         self.internal_dict.extend(dictionary.internal_dict)
     }
 

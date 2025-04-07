@@ -1,8 +1,10 @@
 use anyhow::Result;
+use enigo::{Direction, Enigo, Key, Keyboard, Settings};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Action {
     Text(String),
+    Undo(usize),
 }
 
 impl Action {
@@ -15,6 +17,22 @@ impl Action {
     }
 
     pub(crate) fn execute_action(&self) {
-        todo!()
+        let mut enigo =
+            Enigo::new(&Settings::default()).expect("Unwable to mount virtual keyboard");
+        match self {
+            Action::Text(t) => {
+                enigo.text(t).expect("Unable to send text");
+            }
+            Action::Undo(n) => {
+                (1..*n).for_each(|_| {
+                    enigo
+                        .key(Key::Backspace, Direction::Press)
+                        .expect("Unable to use keys?");
+                    enigo
+                        .key(Key::Backspace, Direction::Release)
+                        .expect("Unable to use keys?");
+                });
+            }
+        }
     }
 }

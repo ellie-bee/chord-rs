@@ -41,39 +41,75 @@ where
                 continue;
             };
 
-            self.check_strokes.push_back(stroke);
-            if self.check_strokes.len() > self.dictionary.longest_key_len() {
-                self.check_strokes.pop_front();
-            }
+            self.new_stroke(stroke);
 
-            let mut actions: Vec<Action> = Vec::new();
-            let strokes: Vec<_> = self.check_strokes.iter().cloned().collect();
-
-            let mut i = 0;
-            while i < strokes.len() {
-                let mut best_match: Option<(usize, &Action)> = None;
-
-                // find the longest prefix of strokes that is a valid entry in the dictionary
-                for j in (i + 1)..=strokes.len() {
-                    let prefix = &strokes[i..j];
-                    if let Some(action) = self.dictionary.lookup(prefix) {
-                        best_match = Some((j, action));
-                    }
-                }
-
-                if let Some((next_i, action)) = best_match {
-                    actions.push(action.clone());
-                    i = next_i;
-                } else {
-                    i += 1;
-                }
-            }
-
-            println!("{} | {:?}", stroke.as_tape(), actions);
+            println!("{}", stroke.as_tape());
         }
     }
     pub(crate) fn disconnect(&mut self) {
         self.machine.as_mut().map(|m| m.disconnect());
         self.machine = None;
+    }
+
+    fn translate_strokes(&self) -> Vec<Action> {
+        let mut actions: Vec<Action> = Vec::new();
+        let strokes: Vec<_> = self.check_strokes.iter().cloned().collect();
+
+        let mut start = 0;
+        while start < strokes.len() {
+            let mut best_match: Option<(usize, &Action)> = None;
+
+            for end in (start + 1)..=strokes.len() {
+                let prefix = &strokes[start..end];
+                if let Some(action) = self.dictionary.lookup(prefix) {
+                    best_match = Some((end, action));
+                }
+            }
+
+            if let Some((next_start, action)) = best_match {
+                actions.push(action.clone());
+                start = next_start;
+            } else {
+                start += 1;
+            }
+        }
+
+        actions
+    }
+
+    fn new_stroke(&mut self, stroke: Stroke) {
+        self.check_strokes.push_back(stroke);
+        if self.check_strokes.len() > self.dictionary.longest_key_len() {
+            self.check_strokes.pop_front();
+        }
+
+        let actions = self.translate_strokes();
+
+        self.action_differences(&actions);
+
+        self.action_history.extend_from_slice(&actions.clone());
+    }
+
+    fn action_differences(&self, actions: &[Action]) {
+        let mut updates = Vec::new();
+        let mut index = 0;
+
+        while index < self.action_history.len() && index < actions.len() {
+            if self.action_history[index] != actions[index] {
+                if let Action::Text(t) = &self.action_history[index] {
+                    updates.push(Action::Undo(t.len()));
+                }
+                updates.push(actions[index].clone());
+            }
+
+            index += 1;
+        }
+
+        while index < actions.len() {
+            updates.push(actions[index].clone());
+            index += 1;
+        }
+
+        updates.iter().map(|action| action.execute_action());
     }
 }
