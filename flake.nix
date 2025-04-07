@@ -22,15 +22,6 @@
 						pre-commit
 						rustPackages.clippy
 						xdotool
-						xorg.libX11
-  					xorg.libXtst
-  					xorg.libXi
-					];
-					nativeBuildInputs = [
-						xdotool
-						xorg.libX11
-  					xorg.libXtst
-  					xorg.libXi
 					];
           RUST_SRC_PATH = rustPlatform.rustLibSrc;
         };

@@ -110,6 +110,6 @@ where
             index += 1;
         }
 
-        updates.iter().map(|action| action.execute_action());
+        updates.iter().for_each(|action| action.execute_action());
     }
 }

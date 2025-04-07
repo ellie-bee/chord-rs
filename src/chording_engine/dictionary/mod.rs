@@ -65,17 +65,18 @@ impl Dictionary {
     }
 
     fn update_longest_key_len(&mut self) -> usize {
-        let mut longest = 0;
-        for k in self.internal_dict.keys() {
-            let k_len = k.length();
-            if longest < k_len {
-                longest = k_len
+        if let Some(longest) = self.internal_dict.keys().reduce(|prev, next| {
+            if prev.length() > next.length() {
+                prev
+            } else {
+                next
             }
+        }) {
+            self.longest_key_len = Some(longest.length());
+            longest.length()
+        } else {
+            0
         }
-
-        self.longest_key_len = Some(longest);
-
-        longest
     }
 
     pub(crate) fn longest_key_len(&mut self) -> usize {
